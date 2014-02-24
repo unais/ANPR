@@ -1,0 +1,98 @@
+#include <opencv2/highgui/highgui.hpp>
+#include <iostream>
+
+#ifdef _WIN32
+#include <conio.h>
+#elif __linux__
+#include "conio.h"
+#endif
+
+#include "recognizer.h"
+
+int main(int argc, char* argv[]) {
+
+    std::string answer;
+    anpr::Recognizer r("train/");
+
+    /*
+     CvCapture* cvCreateCameraCapture( int index );
+     index:
+      Index of the camera to be used. If there is only one camera or it does not matter what camera to use -1 may be passed.
+    */
+    //CvCapture* capture = cvCreateCameraCapture(CV_CAP_ANY);
+
+    //for checking whether we need a gui to show camera capture - if needed showGui will be true
+//    bool showGui = (argc > 1) && (!strcmp(argv[1], "--gui"));
+./a	
+  //  if (showGui) {
+	/*
+	int cvNamedWindow( const char* name, int flags=CV_WINDOW_AUTOSIZE );
+	name
+	Name of the window which is used as window identifier and appears in the window caption.
+	flags
+	Flags of the window. Currently the only supported flag is CV_WINDOW_AUTOSIZE. If it is set, window size is automatically adjusted 	  to fit the displayed image (see cvShowImage), while user can not change the window size manually.
+	*/
+  //      cvNamedWindow("Camera", 0);
+	/*
+	void cvResizeWindow( const char* name, int width, int height );
+	name
+		Name of the window to be resized.
+	width
+		New width
+	height
+		New height
+
+	*/
+//        cvResizeWindow("Camera", 640, 350);
+//    }
+
+   // while (true) {
+        /*
+	IplImage* cvQueryFrame( CvCapture* capture );
+	capture
+		video capturing structure.
+	The function cvQueryFrame grabs a frame from camera or video file, decompresses and returns it. This function is just a combination of cvGrabFrame and cvRetrieveFrame in one call. The returned image should not be released or modified by user.
+	*/
+
+        IplImage* frame =  cvLoadImage(argv[1]);
+        //IplImage* frame = cvQueryFrame(capture);
+	// IplImage to Mat Image conversion
+        cv::Mat frameMat = frame;
+        if (r.RecognizePlateNumber(frameMat, answer)) {
+            std::cout <<"License Plate : " <<answer << std::endl;
+        }
+
+
+/****
+        if (showGui) {
+            cv::imshow("Camera", frameMat);
+            if ((cvWaitKey(10) & 255) == 27) {
+		
+		//void cvDestroyWindow( const char* name );
+		//name
+		//	Name of the window to be destroyed.
+		//The function cvDestroyWindow destroys the window with a given name.
+		
+                cvDestroyWindow("Camera");
+                break;
+            }
+        }
+****/
+ 
+	//It is useful to break while camera gui is not loaded
+ //      if (kbhit() && getch() == 32) {
+ //           break;
+ //       }
+ //   }
+
+    /*
+    	void cvReleaseCapture( CvCapture** capture );
+	capture
+	pointer to video capturing structure.
+	The function cvReleaseCapture releases the CvCapture structure allocated by cvCreateFileCapture or cvCreateCameraCapture.
+    */
+
+    //cvReleaseCapture(&capture);
+ //    cvReleaseImage(&frame);
+    return 0;
+}
